@@ -205,6 +205,7 @@
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
   .btn-ghost { flex: 0 0 auto; padding: 15px 20px; background: #fff; color: var(--ink-soft); border: 1.5px solid var(--border); }
   .btn-ghost:hover { background: #f8fafc; }
+  .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
   .spinner { width: 17px; height: 17px; border: 2.5px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   .spinner.show { display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -213,6 +214,13 @@
 
   .banner-error { display: none; background: var(--danger-soft); border: 1px solid #fecaca; color: var(--danger); padding: 13px 16px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600; margin-bottom: 18px; }
   .banner-error.show { display: block; }
+
+  .submit-progress { display: none; margin-top: 18px; }
+  .submit-progress.show { display: block; }
+  .submit-progress-track { width: 100%; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .submit-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal), var(--teal-dark)); border-radius: 999px; transition: width 0.3s ease; }
+  .submit-progress-label { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--teal-deep); margin: 10px 0 3px; }
+  .submit-progress-warn { text-align: center; font-size: 11.5px; color: var(--ink-faint); margin: 0; }
 
   /* ---------- success ---------- */
   #success-screen { display: none; text-align: center; padding: 20px 6px; }
@@ -442,11 +450,17 @@
         </label>
       </div>
       <div class="panel-nav">
-        <button type="button" class="btn btn-ghost" data-back>Back</button>
+        <button type="button" class="btn btn-ghost" data-back id="review-back-btn">Back</button>
         <button type="submit" class="btn btn-primary" id="submit-btn" disabled>
           <span class="spinner" id="spinner"></span>
           <span id="submit-label">Submit application</span>
         </button>
+      </div>
+
+      <div class="submit-progress" id="submit-progress">
+        <div class="submit-progress-track"><div class="submit-progress-fill" id="submit-progress-fill"></div></div>
+        <p class="submit-progress-label">Submitting your application… <span id="submit-progress-pct">0</span>%</p>
+        <p class="submit-progress-warn">Please don't close this page — this'll just take a few seconds.</p>
       </div>
     </div>
   </form>
@@ -688,6 +702,38 @@
     return div.innerHTML;
   }
 
+  // ---------- submit progress ----------
+  const submitProgress = document.getElementById('submit-progress');
+  const submitProgressFill = document.getElementById('submit-progress-fill');
+  const submitProgressPct = document.getElementById('submit-progress-pct');
+  const reviewBackBtn = document.getElementById('review-back-btn');
+  let progressTimer = null;
+
+  function setProgress(pct) {
+    submitProgressFill.style.width = pct + '%';
+    submitProgressPct.textContent = Math.round(pct);
+  }
+
+  function startFakeProgress() {
+    let pct = 0;
+    setProgress(0);
+    progressTimer = setInterval(() => {
+      pct += Math.max((90 - pct) * 0.08, 0.4);
+      if (pct > 90) pct = 90;
+      setProgress(pct);
+    }, 150);
+  }
+
+  function stopFakeProgress(finalPct) {
+    if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+    setProgress(finalPct);
+  }
+
+  function warnBeforeUnload(e) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+
   // ---------- submit ----------
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -695,8 +741,12 @@
     if (!consentCheckbox.checked) return;
 
     submitBtn.disabled = true;
+    reviewBackBtn.disabled = true;
     spinner.classList.add('show');
     submitLabel.textContent = 'Submitting...';
+    submitProgress.classList.add('show');
+    startFakeProgress();
+    window.addEventListener('beforeunload', warnBeforeUnload);
 
     try {
       const resumeBase64 = await fileToBase64(selectedFile);
@@ -727,14 +777,23 @@
       const json = await res.json();
       if (json.result !== 'success') throw new Error(json.message || 'Submission failed');
 
-      form.style.display = 'none';
-      document.querySelector('.stepper-wrap').style.display = 'none';
-      document.getElementById('success-screen').classList.add('show');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.removeEventListener('beforeunload', warnBeforeUnload);
+      stopFakeProgress(100);
+
+      setTimeout(() => {
+        form.style.display = 'none';
+        document.querySelector('.stepper-wrap').style.display = 'none';
+        document.getElementById('success-screen').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 350);
 
     } catch (err) {
+      window.removeEventListener('beforeunload', warnBeforeUnload);
+      stopFakeProgress(0);
+      submitProgress.classList.remove('show');
       errorBanner.classList.add('show');
       submitBtn.disabled = false;
+      reviewBackBtn.disabled = false;
       spinner.classList.remove('show');
       submitLabel.textContent = 'Submit application';
       console.error(err);
