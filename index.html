@@ -156,6 +156,12 @@
   .err-msg { display: none; color: var(--danger); font-size: 12px; margin-top: 6px; font-weight: 600; }
   .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--danger); }
   .field.invalid .err-msg { display: block; }
+
+  .role-details { display: none; background: var(--teal-soft); border: 1px solid var(--teal-soft-2); border-radius: var(--radius-md); padding: 16px 18px; margin-top: -4px; margin-bottom: 20px; animation: enter 0.3s ease; }
+  .role-details.show { display: block; }
+  .role-details-title { margin: 0 0 8px; font-size: 12.5px; font-weight: 800; color: var(--teal-deep); text-transform: uppercase; letter-spacing: 0.03em; }
+  .role-details ul { margin: 0; padding-left: 18px; }
+  .role-details li { font-size: 13.5px; color: var(--ink); line-height: 1.6; }
   .char-count { text-align: right; font-size: 11.5px; color: var(--ink-faint); margin-top: 5px; }
 
   /* ---------- dropzone ---------- */
@@ -328,6 +334,11 @@
           </select>
           <div class="err-msg">Please select a position.</div>
         </div>
+
+        <div class="role-details" id="role-details">
+          <p class="role-details-title">What you'll be doing</p>
+          <ul id="role-details-list"></ul>
+        </div>
       </div>
       <div class="panel-nav">
         <button type="button" class="btn btn-ghost" data-back>Back</button>
@@ -478,6 +489,46 @@
   let currentStep = 0;
   const followedCheckbox = document.getElementById('followed-linkedin');
   const consentCheckbox = document.getElementById('consent-data');
+
+  // TODO: these are draft bullets written from general knowledge of Lendmate's product —
+  // review and edit for accuracy before relying on them for real applicants.
+  const ROLE_DETAILS = {
+    'Operational Analyst Intern': [
+      'Support day-to-day loan operations and help keep processes running smoothly',
+      'Monitor loan performance data and flag issues or anomalies',
+      'Assist in documenting and improving internal workflows'
+    ],
+    'Data Analyst Intern': [
+      'Analyze lending and operations data to surface trends and insights',
+      'Build and maintain reports and dashboards for the team',
+      'Work with tools like Excel, SQL, and Python to clean and interpret data'
+    ],
+    'Backend Developer Intern': [
+      'Help build and maintain APIs and backend services powering our lending platform',
+      'Work with databases and server-side logic alongside our engineering team',
+      'Contribute to code reviews and help improve system reliability'
+    ],
+    'React Front-end Developer Intern': [
+      'Build and improve user-facing features using React',
+      'Collaborate with design to turn mockups into polished, responsive UI',
+      'Help maintain and optimize our front-end codebase'
+    ],
+    'Full-stack Developer Intern': [
+      'Work across the stack — from UI to backend logic and APIs',
+      'Ship end-to-end features in collaboration with product and engineering',
+      'Get hands-on exposure to our full application architecture'
+    ]
+  };
+
+  const positionSelect = document.getElementById('position');
+  const roleDetails = document.getElementById('role-details');
+  const roleDetailsList = document.getElementById('role-details-list');
+  positionSelect.addEventListener('change', () => {
+    const bullets = ROLE_DETAILS[positionSelect.value];
+    if (!bullets) { roleDetails.classList.remove('show'); return; }
+    roleDetailsList.innerHTML = bullets.map(b => `<li>${b}</li>`).join('');
+    roleDetails.classList.add('show');
+  });
 
   const stepFieldMap = {
     0: [],
