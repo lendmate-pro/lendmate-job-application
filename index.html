@@ -503,6 +503,11 @@
   document.getElementById('fast-track-link').href = CONFIG.LINKEDIN_URL;
   document.getElementById('hero-company').textContent = CONFIG.COMPANY_NAME;
 
+  // Silently "warm up" the Apps Script backend as soon as the form loads, so its
+  // container is already spun up by the time the applicant reaches Submit — avoids
+  // the slow first-request cold start that can otherwise cause a submission to fail.
+  fetch(CONFIG.APPS_SCRIPT_URL, { method: 'GET' }).catch(() => {});
+
   const form = document.getElementById('apply-form');
   const panels = Array.from(document.querySelectorAll('.step-panel'));
   const stepNodes = Array.from(document.querySelectorAll('.step-node'));
@@ -734,6 +739,27 @@
     e.returnValue = '';
   }
 
+  // Retries once in the background before surfacing an error — covers Apps Script
+  // "cold start" delays that can otherwise cause the very first submission attempt
+  // to fail on a slow connection.
+  async function submitWithRetry(payload, attempts = 2) {
+    let lastErr;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        return await res.json();
+      } catch (err) {
+        lastErr = err;
+        if (i < attempts - 1) await new Promise(r => setTimeout(r, 1200));
+      }
+    }
+    throw lastErr;
+  }
+
   // ---------- submit ----------
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -769,12 +795,7 @@
         resumeBase64: resumeBase64
       };
 
-      const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-      const json = await res.json();
+      const json = await submitWithRetry(payload);
       if (json.result !== 'success') throw new Error(json.message || 'Submission failed');
 
       window.removeEventListener('beforeunload', warnBeforeUnload);
