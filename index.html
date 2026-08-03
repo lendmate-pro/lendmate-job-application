@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Careers at Lendmate — Apply Now</title>
 <meta name="description" content="Apply for a role at Lendmate." />
+<meta name="theme-color" content="#14b8a6" />
 <link rel="icon" type="image/x-icon" href="https://lendmate.pro/images/favicon.ico" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,6 +40,7 @@
     background: var(--bg);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   /* ---------- header ---------- */
@@ -130,7 +132,7 @@
   .field label .opt { color: var(--ink-faint); font-weight: 500; }
   .field input[type=text], .field input[type=email], .field input[type=tel], .field select, .field textarea {
     width: 100%; padding: 12.5px 15px; border-radius: var(--radius-md); border: 1.5px solid var(--border);
-    font-family: inherit; font-size: 14.5px; color: var(--ink); background: #fbfcfd;
+    font-family: inherit; font-size: 16px; color: var(--ink); background: #fbfcfd;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .field input:focus, .field select:focus, .field textarea:focus {
@@ -138,7 +140,17 @@
   }
   .field textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
   .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 520px) { .row-2 { grid-template-columns: 1fr; } .step-label { display: none; } }
+  @media (max-width: 520px) {
+    .row-2 { grid-template-columns: 1fr; }
+    .step-label { display: none; }
+    header { padding: 16px 16px; }
+    .hero { padding: 16px 16px 4px; }
+    main { padding: 8px 16px 70px; }
+    .stepper-wrap { padding: 14px 16px; margin-top: 24px; }
+    .panel { padding: 22px; min-height: 0; }
+    .panel-nav { gap: 10px; }
+    .btn-ghost { padding: 15px 16px; }
+  }
   .err-msg { display: none; color: var(--danger); font-size: 12px; margin-top: 6px; font-weight: 600; }
   .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--danger); }
   .field.invalid .err-msg { display: block; }
@@ -155,10 +167,10 @@
   .dropzone svg { color: var(--teal-dark); margin-bottom: 10px; }
   .dropzone p { margin: 0; font-size: 14px; color: var(--ink-soft); }
   .dropzone strong { color: var(--teal-dark); }
-  .file-chip { display: none; align-items: center; gap: 10px; justify-content: center; margin-top: 8px; }
+  .file-chip { display: none; align-items: center; gap: 10px; justify-content: center; margin-top: 8px; max-width: 100%; }
   .file-chip.show { display: flex; }
-  .file-chip span { font-size: 13.5px; font-weight: 700; color: var(--teal-deep); }
-  .file-chip button { border: none; background: none; color: var(--ink-faint); cursor: pointer; font-size: 12.5px; text-decoration: underline; }
+  .file-chip span { font-size: 13.5px; font-weight: 700; color: var(--teal-deep); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70vw; }
+  .file-chip button { border: none; background: none; color: var(--ink-faint); cursor: pointer; font-size: 12.5px; text-decoration: underline; flex-shrink: 0; }
 
   /* ---------- review ---------- */
   .review-list { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 18px; }
@@ -281,18 +293,18 @@
 
         <div class="field" id="field-name">
           <label for="fullName">Full name <span class="req">*</span></label>
-          <input type="text" id="fullName" placeholder="Jane Doe" required />
+          <input type="text" id="fullName" placeholder="Jane Doe" autocomplete="name" required />
           <div class="err-msg">Please enter your full name.</div>
         </div>
         <div class="row-2">
           <div class="field" id="field-email">
             <label for="email">Email <span class="req">*</span></label>
-            <input type="email" id="email" placeholder="jane@email.com" required />
+            <input type="email" id="email" placeholder="jane@email.com" autocomplete="email" inputmode="email" required />
             <div class="err-msg">Please enter a valid email.</div>
           </div>
           <div class="field" id="field-phone">
             <label for="phone">Phone number <span class="req">*</span></label>
-            <input type="tel" id="phone" placeholder="+1 (555) 000-0000" required />
+            <input type="tel" id="phone" placeholder="+1 (555) 000-0000" autocomplete="tel" inputmode="tel" required />
             <div class="err-msg">Please enter a valid phone number.</div>
           </div>
         </div>
@@ -339,7 +351,7 @@
         <div class="row-2">
           <div class="field">
             <label for="linkedinProfile">Your LinkedIn <span class="opt">(optional)</span></label>
-            <input type="text" id="linkedinProfile" placeholder="linkedin.com/in/yourname" />
+            <input type="text" id="linkedinProfile" placeholder="linkedin.com/in/yourname" autocomplete="url" />
           </div>
           <div class="field">
             <label for="portfolio">Portfolio <span class="opt">(optional)</span></label>
