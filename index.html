@@ -205,6 +205,9 @@
   @keyframes draw-check { to { stroke-dashoffset: 0; } }
   #success-screen h2 { font-size: 23px; font-weight: 800; margin: 0 0 10px; }
   #success-screen p { color: var(--ink-soft); font-size: 14.5px; line-height: 1.6; max-width: 380px; margin: 0 auto; }
+  .fast-track { margin-top: 30px; padding-top: 28px; border-top: 1px solid var(--border); }
+  .fast-track-title { font-weight: 800; color: var(--ink) !important; font-size: 15.5px !important; margin: 0 0 6px !important; }
+  .fast-track-sub { margin: 0 auto 18px !important; }
 
   footer { text-align: center; padding: 20px; color: var(--ink-faint); font-size: 12px; }
 </style>
@@ -251,7 +254,7 @@
           <div class="li-icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
           </div>
-          <p>Follow the Lendmate LinkedIn page to see new roles, company updates, and get noticed by our hiring team.</p>
+          <p>Follow the Lendmate LinkedIn page to see new roles, company updates, and get noticed by our hiring team. Want to fast-track your application? Send us a direct message on LinkedIn after you apply.</p>
           <a id="linkedin-link" href="https://www.linkedin.com/company/lendmate-pro" target="_blank" rel="noopener" class="li-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
             Follow Lendmate on LinkedIn
@@ -403,7 +406,16 @@
       </svg>
     </div>
     <h2>Application received!</h2>
-    <p>Thanks for applying to Lendmate. Our team will review your application and reach out if there's a match. In the meantime, keep an eye on our LinkedIn page for updates.</p>
+    <p>Thanks for applying to Lendmate. Our team will review your application and reach out if there's a match.</p>
+
+    <div class="fast-track">
+      <p class="fast-track-title">Want to fast-track your application?</p>
+      <p class="fast-track-sub">Follow our LinkedIn page (if you haven't already) and send our team a direct message — it's the quickest way to get on our hiring team's radar.</p>
+      <a id="fast-track-link" href="https://www.linkedin.com/company/lendmate-pro" target="_blank" rel="noopener" class="li-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        Message us on LinkedIn
+      </a>
+    </div>
   </div>
 </main>
 
@@ -420,6 +432,7 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
   document.getElementById('linkedin-link').href = CONFIG.LINKEDIN_URL;
+  document.getElementById('fast-track-link').href = CONFIG.LINKEDIN_URL;
   document.getElementById('hero-company').textContent = CONFIG.COMPANY_NAME;
 
   const form = document.getElementById('apply-form');
