@@ -739,10 +739,10 @@
     e.returnValue = '';
   }
 
-  // Retries once in the background before surfacing an error — covers Apps Script
-  // "cold start" delays that can otherwise cause the very first submission attempt
-  // to fail on a slow connection.
-  async function submitWithRetry(payload, attempts = 2) {
+  // Retries in the background before surfacing an error — covers Apps Script
+  // "cold start" delays and transient failures that can otherwise cause a
+  // submission attempt to fail on a slow connection.
+  async function submitWithRetry(payload, attempts = 3) {
     let lastErr;
     for (let i = 0; i < attempts; i++) {
       try {
