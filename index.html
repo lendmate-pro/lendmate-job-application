@@ -73,6 +73,8 @@
   .hero h1 { font-size: clamp(28px, 4.5vw, 38px); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 10px; line-height: 1.15; }
   .hero h1 span { color: var(--teal-dark); }
   .hero p { font-size: 15.5px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+  .job-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+  .job-meta-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--card); border: 1px solid var(--border); color: var(--ink); padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700; box-shadow: var(--shadow-sm); }
 
   /* ---------- stepper ---------- */
   .stepper-wrap { max-width: 560px; margin: 34px auto 0; padding: 0 24px; position: sticky; top: 0; z-index: 20; background: var(--bg); padding-top: 14px; padding-bottom: 14px; }
@@ -237,6 +239,11 @@
   <div class="hero-inner">
     <h1>Join the team at <span id="hero-company">Lendmate</span></h1>
     <p>We're building automated lending infrastructure for modern capital scaling — and we're looking for people who want to build it with us.</p>
+    <div class="job-meta">
+      <span class="job-meta-pill">🌍 Fully remote</span>
+      <span class="job-meta-pill">🗓️ Monday–Friday</span>
+      <span class="job-meta-pill">🕘 9:00 PM–1:00 AM IST</span>
+    </div>
   </div>
 </section>
 
@@ -312,13 +319,11 @@
           <label for="position">Position applying for <span class="req">*</span></label>
           <select id="position" required>
             <option value="" disabled selected>Select a role</option>
-            <!-- TODO: replace with real open roles once the JD list is ready -->
-            <option>General Application</option>
-            <option>Software Engineer</option>
-            <option>Customer Success</option>
-            <option>Operations</option>
-            <option>Sales</option>
-            <option>Other</option>
+            <option>Operational Analyst Intern</option>
+            <option>Data Analyst Intern</option>
+            <option>Backend Developer</option>
+            <option>React Front-end Developer</option>
+            <option>Full-stack Developer</option>
           </select>
           <div class="err-msg">Please select a position.</div>
         </div>
@@ -372,8 +377,22 @@
           </select>
         </div>
 
+        <div class="field" id="field-availability">
+          <label for="availability">Can you commit to Monday–Friday, 9:00 PM–1:00 AM IST (fully remote)? <span class="req">*</span></label>
+          <select id="availability" required>
+            <option value="" disabled selected>Select an option</option>
+            <option>Yes, I can commit to these hours</option>
+            <option>No, I cannot commit to these hours</option>
+          </select>
+          <div class="err-msg">Please let us know if you can commit to this schedule.</div>
+        </div>
+
+        <div class="field">
+          <label for="relevantExperience">Relevant experience, GitHub/portfolio link, or tools you know <span class="opt">(optional)</span></label>
+          <textarea id="relevantExperience" maxlength="500" placeholder="e.g. github.com/you, relevant coursework, tools you're comfortable with (Excel, SQL, Python, React, Node, etc.)"></textarea>
+        </div>
+
         <div class="field" id="field-cover">
-          <!-- TODO: this is a placeholder question — swap/add real screening questions here once the JD is ready -->
           <label for="coverLetter">Why do you want to work at Lendmate? <span class="req">*</span></label>
           <textarea id="coverLetter" maxlength="800" placeholder="Tell us a bit about yourself and why you're interested in this role..." required></textarea>
           <div class="char-count"><span id="char-count">0</span> / 800</div>
@@ -462,7 +481,7 @@
   const stepFieldMap = {
     0: [],
     1: ['fullName', 'email', 'phone', 'position'],
-    2: ['coverLetter']
+    2: ['availability', 'coverLetter']
   };
 
   function isEmailValid(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
@@ -591,6 +610,7 @@
       ['Position', document.getElementById('position').value],
       ['Resume', selectedFile ? selectedFile.name : '—'],
       ['LinkedIn', document.getElementById('linkedinProfile').value || '—'],
+      ['Available for hours', document.getElementById('availability').value],
       ['Followed LinkedIn page', followedCheckbox.checked ? 'Yes' : 'No'],
     ];
     const list = document.getElementById('review-list');
@@ -626,6 +646,8 @@
         portfolio: document.getElementById('portfolio').value.trim(),
         howHeard: document.getElementById('howHeard').value,
         coverLetter: document.getElementById('coverLetter').value.trim(),
+        availability: document.getElementById('availability').value,
+        relevantExperience: document.getElementById('relevantExperience').value.trim(),
         followedLinkedIn: followedCheckbox.checked,
         resumeFileName: selectedFile.name,
         resumeMimeType: selectedFile.type || 'application/octet-stream',
