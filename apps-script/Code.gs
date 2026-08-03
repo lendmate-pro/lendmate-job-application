@@ -50,20 +50,33 @@ function doPost(e) {
   }
 }
 
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+  setHeaders(sheet);
+  return jsonResponse({ result: 'success', message: 'Headers repaired' });
+}
+
+const HEADERS = [
+  'Timestamp', 'Full Name', 'Email', 'Phone', 'Position',
+  'LinkedIn Profile', 'Portfolio / Website', 'How They Heard About Us',
+  'Why They Want To Work Here', 'Followed LinkedIn Page', 'Resume Link',
+  'Can Commit To Hours', 'Relevant Experience / Links', 'Tell Us About Yourself', 'Fun Fact'
+];
+
+function setHeaders(sheet) {
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  sheet.setFrozenRows(1);
+  sheet.autoResizeColumns(1, HEADERS.length);
+}
+
 function getOrCreateSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (sheet) return sheet;
 
   sheet = ss.insertSheet(SHEET_NAME);
-  sheet.appendRow([
-    'Timestamp', 'Full Name', 'Email', 'Phone', 'Position',
-    'LinkedIn Profile', 'Portfolio / Website', 'How They Heard About Us',
-    'Why They Want To Work Here', 'Followed LinkedIn Page', 'Resume Link',
-    'Can Commit To Hours', 'Relevant Experience / Links', 'Tell Us About Yourself', 'Fun Fact'
-  ]);
-  sheet.setFrozenRows(1);
-  sheet.autoResizeColumns(1, 15);
+  setHeaders(sheet);
   return sheet;
 }
 
