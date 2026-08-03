@@ -39,7 +39,9 @@ function doPost(e) {
       data.followedLinkedIn ? 'Yes' : 'No',
       resumeUrl,
       data.availability || '',
-      data.relevantExperience || ''
+      data.relevantExperience || '',
+      data.aboutYourself || '',
+      data.funFact || ''
     ]);
 
     return jsonResponse({ result: 'success' });
@@ -58,10 +60,10 @@ function getOrCreateSheet() {
     'Timestamp', 'Full Name', 'Email', 'Phone', 'Position',
     'LinkedIn Profile', 'Portfolio / Website', 'How They Heard About Us',
     'Why They Want To Work Here', 'Followed LinkedIn Page', 'Resume Link',
-    'Can Commit To Hours', 'Relevant Experience / Links'
+    'Can Commit To Hours', 'Relevant Experience / Links', 'Tell Us About Yourself', 'Fun Fact'
   ]);
   sheet.setFrozenRows(1);
-  sheet.autoResizeColumns(1, 13);
+  sheet.autoResizeColumns(1, 15);
   return sheet;
 }
 

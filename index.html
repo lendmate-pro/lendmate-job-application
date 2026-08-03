@@ -404,6 +404,17 @@
           <textarea id="relevantExperience" maxlength="500" placeholder="e.g. github.com/you, relevant coursework, tools you're comfortable with (Excel, SQL, Python, React, Node, etc.)"></textarea>
         </div>
 
+        <div class="field" id="field-about">
+          <label for="aboutYourself">Tell us about yourself <span class="req">*</span></label>
+          <textarea id="aboutYourself" maxlength="600" placeholder="A bit about who you are, your background, and what you're looking for..." required></textarea>
+          <div class="err-msg">Please tell us a bit about yourself.</div>
+        </div>
+
+        <div class="field">
+          <label for="funFact">What's a fun fact about working with you? <span class="opt">(optional)</span></label>
+          <input type="text" id="funFact" maxlength="150" placeholder="e.g. I reply to messages way too fast" />
+        </div>
+
         <div class="field" id="field-cover">
           <label for="coverLetter">Why do you want to work at Lendmate? <span class="req">*</span></label>
           <textarea id="coverLetter" maxlength="800" placeholder="Tell us a bit about yourself and why you're interested in this role..." required></textarea>
@@ -533,7 +544,7 @@
   const stepFieldMap = {
     0: [],
     1: ['fullName', 'email', 'phone', 'position'],
-    2: ['availability', 'coverLetter']
+    2: ['availability', 'aboutYourself', 'coverLetter']
   };
 
   function isEmailValid(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
@@ -700,6 +711,8 @@
         coverLetter: document.getElementById('coverLetter').value.trim(),
         availability: document.getElementById('availability').value,
         relevantExperience: document.getElementById('relevantExperience').value.trim(),
+        aboutYourself: document.getElementById('aboutYourself').value.trim(),
+        funFact: document.getElementById('funFact').value.trim(),
         followedLinkedIn: followedCheckbox.checked,
         resumeFileName: selectedFile.name,
         resumeMimeType: selectedFile.type || 'application/octet-stream',
